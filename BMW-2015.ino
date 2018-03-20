@@ -4,10 +4,7 @@
 
 #include <IRremote.h>
 #include <IRremoteInt.h>
-// # include <Summer.h>
 #include <EEPROM.h>
-
-//Summer summer = Summer(12);
 
 #define selfPowerPin A0
 #define batteryPin A2
@@ -60,7 +57,6 @@ void setup() {
 
 void loop(){
   
-///////////////////////////////////////////////////////////////////////////////////////////
   if (Serial.available() > 0) {
     cSender = Serial.read();
     //Serial.println("gavau kazka per seriala");
@@ -100,22 +96,6 @@ void loop(){
         
         uint8_t message4[] = {0x68, 0x1A, 0x3B, 0xA5, 0x62, 0x01, 0x07, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x75, 0x6E, 0x74, 0x69, 0x74, 0x6C, 0x65, 0x64, 0x20, 0x20, 0x20, 0x20, 0x20, 0x97};
         sendMsg(message4);
-     
-     //          0  1  2  3   
-     // 80 0A BF 13 03 10 00 00 00 00 1D 28 --- R
-     // 80 0A BF 13 00 11 00 00 00 00 21 16
-     // 80 0A BF 13 02 10 00 00 00 00 21 15
-     
-     // 80 0A BF 13 03 B0 00 00 00 00 1D 88 --- P
-     // 80 0A BF 13 00 B1 00 00 00 00 21 B6
-     // 80 0A BF 13 02 B0 00 00 00 00 21 B5
-
-
-
-     
-     // 80 0A BF 13 03 80 00 00 00 00 1D B8 --- D
-     // 80 0A BF 13 00 81 00 00 00 00 21 86
-     // 80 0A BF 13 02 80 00 00 00 00 21 85
 
      // REVERSE ON   
      } else if (cSender == 0x80 && cLength == 10 && cBytes[0] == 0x13 && (cBytes[1] == 0x03 || cBytes[1] == 0x00 || cBytes[1] == 0x02) && (cBytes[2] == 0x10 || cBytes[2] == 0x11) ) {   
@@ -141,16 +121,9 @@ void loop(){
         Serial.write(message3, message3[1]+2);  
         const uint8_t message4[] = {0x68, 0x1A, 0x3B, 0xA5, 0x62, 0x01, 0x07, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x75, 0x6E, 0x74, 0x69, 0x74, 0x6C, 0x65, 0x64, 0x20, 0x20, 0x20, 0x20, 0x20, 0x97};
         Serial.write(message4, message4[1]+2);  
-
-        //summer.playTone(500,3);
-
-        /*       
-        const uint8_t message[] = {0x68, 0x04, 0xFF, 0x36, 0xA0, 05}; // CD input
-        Serial.write(message, message[1]+2);
-        */
       
       //************************************************************
-      // VAIRAS
+      // STEARING WHEEL
       //************************************************************
       } else if (cLength == 4 && cBytes[0] == 0x3B) { // VAIRAS
          //unsigned char tmp3 = cBytes[1];
@@ -248,12 +221,9 @@ void loop(){
              break;
         }
       }
-      //************************************************************  
-  
-  
+    
       }
     }
-  ///////////////////////////////////////////////////////////////////////////////////////////
   
   voltage = analogRead(batteryPin) * 2; //1.9965;
   
@@ -266,8 +236,6 @@ void loop(){
     if (voltage < minVoltage) {   // <------ NERA +12 v
       //Serial.println("nera +12v");
       if (digitalRead(playerPin) == HIGH) { // <------ NEATJUNGTA RELE
-        //Serial.println("neatjungtas playeris. isjungiam.");
-        //summer.playTone(500,1);
         rrpower(1);
         delay(1000); 
         digitalWrite(playerPin, LOW); 
@@ -275,7 +243,6 @@ void loop(){
         digitalWrite(lcdPin, LOW);
         digitalWrite(13, LOW); 
       } else {                       // <------ ATJUNGTA RELE (viskas OK)
-        //summer.playTone(3000, 1);   
        digitalWrite(selfPowerPin, LOW); 
       }
       EEPROM.write(eepromLcdPinState, lcdPinState);
@@ -287,15 +254,9 @@ void loop(){
         digitalWrite(playerPin, HIGH);
         digitalWrite(lcdPin, lcdPinState);
         digitalWrite(13, HIGH); 
-        //summer.playTone(10000,5); 
       }
     }
   }
-    
-
-  
-
-
     
 }
 
